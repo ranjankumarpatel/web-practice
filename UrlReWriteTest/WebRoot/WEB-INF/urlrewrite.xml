@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+
+    <rule>
+        <note>
+            The rule means that requests to /test1 will be redirected to /test/test.jsp
+            the url will be rewritten.
+        </note>
+        <from>^/test1</from>
+        <to>/test/test.jsp</to>
+    </rule>
+    
+    <rule>
+        <from>^/test2/([0-9]+)$</from>
+        <to>/test/test.jsp?product_id=$1</to>
+    </rule>
+    
+    <rule>
+        <from>^/test3/([a-z]+)/([a-z]+)$</from>
+        <to>/test/test.jsp?country=$1&amp;city=$2</to>
+    </rule>
+    
+    <!-- <rule>
+        <name>Domain Name Check</name>
+        <condition name="host" operator="notequal">www.example.com</condition>
+        <from>^(.*)$</from>
+        <to type="redirect">http://localhost:8089/UrlReWriteTest/index.jsp</to>
+    </rule> -->
+    
+    <rule>
+       <name>Strip URL Session ID's</name>
+       <note>
+           Strip ;jsession=XXX from urls passed through
+response.encodeURL().
+           The characters ? and # are the only things we can use to
+find out where the jsessionid ends.
+           The expression in 'from' below contains three capture
+groups, the last two being optional.
+               1, everything before ;jesessionid
+               2, everything after ;jesessionid=XXX starting with a ?
+(to get the query string) up to #
+               3, everything ;jesessionid=XXX and optionally ?XXX
+starting with a # (to get the target)
+           eg,
+           from index.jsp;jsessionid=sss?qqq to index.jsp?qqq
+           from index.jsp;jsessionid=sss?qqq#ttt to index.jsp?qqq#ttt
+           from index.jsp;jsessionid=asdasdasdsadsadasd#dfds -
+index.jsp#dfds
+           from u.jsp;jsessionid=wert.hg - u.jsp
+           from /;jsessionid=tyu - /
+       </note>
+       <condition type="requested-session-id-from-url" operator="equal">true</condition>
+       <from>^(.*?)(?:\;jsessionid=[^\?#]*)?(\?[^#]*)?(#.*)?$</from>
+       <to type="permanent-redirect">$1$2$3</to>
+   </rule>
+   
+   <rule>
+        <from>.*</from>
+        <set type="response-header" name="Cache-Control">max-age=3600, must-revalidate</set>
+    </rule>
+    
+    <rule>
+        <from>^/test4/([a-z]+)/([a-z]+)$</from>
+        <to>/servlet/TestServlet</to>
+        <set name="fname">$1</set>
+        <set name="lname">$2</set>
+    </rule>
+
+
+    <outbound-rule>
+        <note>
+            The outbound-rule specifies that when response.encodeURL is called (if you are using JSTL c:url)
+            the url /rewrite-status will be rewritten to /test/status/.
+
+            The above rule and this outbound-rule means that end users should never see the
+            url /rewrite-status only /test/status/ both in thier location bar and in hyperlinks
+            in your pages.
+        </note>
+        <from>/some/index.jsp</from>
+        <to type="redirect">/test/test.jsp</to>
+    </outbound-rule>
+
+
+    
+
+</urlrewrite>
