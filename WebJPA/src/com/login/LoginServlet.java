@@ -33,6 +33,7 @@ public class LoginServlet extends HttpServlet {
 	 * @throws ServletException if an error occurred
 	 * @throws IOException if an error occurred
 	 */
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
@@ -46,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 		out.println("<h3>Login</h3>");
 		try {
 		String username = request.getParameter("username");
-		System.out.println(LoginBinder.logins);
+		System.out.println(LoginBinder.getLogins());
 		if(username.equalsIgnoreCase("ranjan")){
 			LoginBinder loginBinder = new LoginBinder();
 			loginBinder.setUsername(username);
@@ -59,7 +60,7 @@ public class LoginServlet extends HttpServlet {
 				
 			}
 		}else{
-			session.setAttribute("UserContext", null);
+			//session.setAttribute("UserContext", null);
 			throw new LoginException("Invalid user");
 		}
 		
@@ -69,7 +70,7 @@ public class LoginServlet extends HttpServlet {
 		}
 		
 		
-		System.out.println(LoginBinder.logins);
+		System.out.println(LoginBinder.getLogins());
 		
 		out.println("  </BODY>");
 		out.println("</HTML>");
@@ -87,6 +88,7 @@ public class LoginServlet extends HttpServlet {
 	 * @throws ServletException if an error occurred
 	 * @throws IOException if an error occurred
 	 */
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

@@ -1,10 +1,10 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 
-<!DOCTYPE HTML>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
     <base href="<%=basePath%>">
@@ -18,19 +18,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
-	
-	 <script>
-            function startCountdown() {
-                window.setTimeout(alertSessionTimeout, ${pageContext.session.maxInactiveInterval * 1000});
-            }
-            
-            function alertSessionTimeout() {
-                alert("You're session is going to timeout in 1 minute.");
-            }
-        </script>
   </head>
   
-  <body onload="startCountdown();">
-     <br><c:out value="${sessionScope.user}" />
+  <body>
+    This is my JSP page. <br>
+    ${sessionScope.user}
   </body>
 </html>

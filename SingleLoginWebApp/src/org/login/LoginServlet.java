@@ -1,4 +1,4 @@
-package com.login;
+package org.login;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,17 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LogoutServlet extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 7683163793272028193L;
+	private static final long serialVersionUID = -726629473355746589L;
 
 	/**
 	 * Constructor of the object.
 	 */
-	public LogoutServlet() {
+	public LoginServlet() {
 		super();
 	}
 
@@ -36,6 +36,7 @@ public class LogoutServlet extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		HttpSession session = request.getSession();
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -43,10 +44,34 @@ public class LogoutServlet extends HttpServlet {
 		out.println("<HTML>");
 		out.println("  <HEAD><TITLE>A Servlet</TITLE></HEAD>");
 		out.println("  <BODY>");
-		LoginBinder loginBinder = (LoginBinder) session.getAttribute("user");
-		loginBinder.logout();
+		out.println("<h3>Login</h3>");
+		try {
+		String username = request.getParameter("username");
+		System.out.println(LoginBinder.getLogins());
+		if(username.equalsIgnoreCase("ranjan")){
+			LoginBinder loginBinder = new LoginBinder();
+			loginBinder.setUsername(username);
+			session.setAttribute("user", loginBinder);
+			if(loginBinder.isAlreadyLoggedIn()){
+					//session.removeAttribute("user");
+					throw new LoginException("Already logged in");
+				
+			}else{
+				
+			}
+		}else{
+			//session.setAttribute("UserContext", null);
+			throw new LoginException("Invalid user");
+		}
 		
-		out.println("Logout");
+		} catch (LoginException e) {
+			out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		
+		System.out.println(LoginBinder.getLogins());
+		
 		out.println("  </BODY>");
 		out.println("</HTML>");
 		out.flush();
